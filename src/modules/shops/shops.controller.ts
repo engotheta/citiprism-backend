@@ -13,6 +13,11 @@ export class ShopsController {
     return this.shopsService.findAll();
   }
 
+  @Get('all')
+  async all() {
+    return await new Promise(resolve => setTimeout(resolve, 4000));
+  }
+
   @Get(':uid')
   findOne(@Param('uid') uid: string) {
     return this.shopsService.findOne(uid);

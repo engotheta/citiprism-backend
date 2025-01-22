@@ -16,7 +16,7 @@ import appConfig from './config/app.config';
       isGlobal: true,
       envFilePath: '.env',
       load: [appConfig],
-      validationSchema: appConfig().typeOrmValidationSchema,
+      validationSchema: appConfig().validationSchema,
     }),
 
     TypeOrmModule.forRootAsync({

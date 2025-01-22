@@ -14,19 +14,23 @@ const getTypeOrmModuleOptions = (): TypeOrmModuleOptions => ({
   synchronize: true,
 });
 
-const getTypeOrmValidationSchema = () => {
+const getValidationSchema = () => {
   return Joi.object({
     DATABASE_HOST: Joi.string().required(),
     DATABASE_PORT: Joi.number().required(),
     DATABASE_USER: Joi.string().required(),
     DATABASE_PASSWORD: Joi.string().required(),
     DATABASE_NAME: Joi.string().required(),
+
+    REQUEST_TIMEOUT: Joi.number().required(),
   });
 };
 
 export default registerAs('AppConfig', () => ({
-  environment: process.env.NODE_ENV || 'development',
   typeOrmModuleOptions: getTypeOrmModuleOptions(),
-  typeOrmValidationSchema: getTypeOrmValidationSchema(),
+
+  environment: process.env.NODE_ENV || 'development',
+  validationSchema: getValidationSchema(),
   apiKey: process.env.API_KEY,
+  requestTimeout: +process.env.REQUEST_TIMEOUT,
 }));
