@@ -1,11 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ShopsService } from './shops.service';
 import { CreateShopDto, UpdateShopDto } from './entitities/shop.entity';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('shops')
 export class ShopsController {
   constructor(private readonly shopsService: ShopsService) {}
 
+  @Public()
   @Get()
   findAll() {
     return this.shopsService.findAll();

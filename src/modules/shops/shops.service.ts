@@ -1,53 +1,41 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Shop, CreateShopDto, UpdateShopDto } from './entitities/shop.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ShopsService {
-  private shops: Shop[] = [
-    {
-      name: 'Century Trends',
-      categories: ['jewely', 'clothe accessories'],
-      id: 1,
-      uid: '1',
-    },
-  ];
+  constructor(
+    @InjectRepository(Shop)
+    private readonly shopsRepo: Repository<Shop>
+  ) {}
 
-  findAll() {
-    return this.shops;
-  }
-
-  getShop(uid: string) {
-    const shop = this.shops.find(s => s.uid === uid);
+  async findOne(uid: string) {
+    const shop = await this.shopsRepo.findOne({ where: { id: +uid } });
     if (!shop) throw new HttpException(`Shop (${uid}) not Found`, HttpStatus.NOT_FOUND);
     return shop;
   }
 
-  findOne(uid: string) {
-    const shop: Shop = this.getShop(uid);
+  async findAll() {
+    const shops: Shop[] = await this.shopsRepo.find();
+    return shops;
+  }
+
+  async create(dto: CreateShopDto) {
+    const shop = this.shopsRepo.create(dto);
+    await this.shopsRepo.save(shop);
     return shop;
   }
 
-  create(dto: CreateShopDto) {
-    const shop: Shop = <any>{
-      ...dto,
-      id: this.shops.length + 1,
-      uid: (this.shops.length + 1).toString(),
-    };
-
-    this.shops.push(shop);
+  async update(uid: string, dto: UpdateShopDto) {
+    let shop: Shop = await this.findOne(uid);
+    shop = await this.shopsRepo.save({ ...shop, ...dto });
     return shop;
   }
 
-  update(uid: string, dto: UpdateShopDto) {
-    let shop: Shop = this.getShop(uid);
-    shop = <Shop>{ ...shop, ...dto };
-    this.shops = this.shops.map(s => (s.uid === uid ? shop : s));
-    return shop;
-  }
-
-  remove(uid: string) {
-    const shop: Shop = this.getShop(uid);
-    this.shops = this.shops.filter(s => s.uid !== uid);
+  async remove(uid: string) {
+    let shop: Shop = await this.findOne(uid);
+    shop = await this.shopsRepo.remove({ id: +uid, ...shop });
     return shop;
   }
 }
