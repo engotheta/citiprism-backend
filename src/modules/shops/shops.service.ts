@@ -11,8 +11,8 @@ export class ShopsService {
   ) {}
 
   async findOne(uid: string) {
-    const shop = await this.shopsRepo.findOne({ where: { id: +uid } });
-    if (!shop) throw new HttpException(`Shop (${uid}) not Found`, HttpStatus.NOT_FOUND);
+    const shop = await this.shopsRepo.findOne({ where: { uid: uid } });
+    if (!shop) throw new HttpException(`Specified Shop not Found`, HttpStatus.NOT_FOUND);
     return shop;
   }
 
@@ -35,7 +35,7 @@ export class ShopsService {
 
   async remove(uid: string) {
     let shop: Shop = await this.findOne(uid);
-    shop = await this.shopsRepo.remove({ id: +uid, ...shop });
+    shop = await this.shopsRepo.remove({ uid: uid, ...shop });
     return shop;
   }
 }

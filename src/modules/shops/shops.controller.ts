@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { ShopsService } from './shops.service';
 import { CreateShopDto, UpdateShopDto } from './entitities/shop.entity';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -19,8 +19,8 @@ export class ShopsController {
   }
 
   @Get(':uid')
-  findOne(@Param('uid') uid: string) {
-    return this.shopsService.findOne(uid);
+  findOne(@Param('uid', ParseUUIDPipe) uid: string) {
+    return this.shopsService.findOne(uid + '');
   }
 
   @Post()
@@ -29,12 +29,12 @@ export class ShopsController {
   }
 
   @Patch(':uid')
-  update(@Param('uid') uid: string, @Body() dto: UpdateShopDto) {
+  update(@Param('uid', ParseUUIDPipe) uid: string, @Body() dto: UpdateShopDto) {
     return this.shopsService.update(uid, dto);
   }
 
   @Delete(':uid')
-  remove(@Param('uid') uid: string) {
+  remove(@Param('uid', ParseUUIDPipe) uid: string) {
     return this.shopsService.remove(uid);
   }
 }

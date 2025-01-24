@@ -20,6 +20,7 @@ export interface AppResponse {
   statusCode: StatusCode;
   error: string;
   timeStamp: any;
+  url: string;
 }
 
 @Injectable()
